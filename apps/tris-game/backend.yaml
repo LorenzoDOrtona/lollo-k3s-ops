@@ -1,0 +1,57 @@
+# k3s/02-backend.yaml
+
+# 1. Deploy the Go backend container
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: go-backend
+  template:
+    metadata:
+      labels:
+        app: go-backend
+    spec:
+      containers:
+        - name: go-backend
+          # Replace with your actual GitHub username and repository name
+          image: ghcr.io/lorenzodortona/tris_inception-backend:latest
+          # Always pull the latest image upon restart
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            # Connect to the database using the Service name defined in database.yaml
+            - name: DB_HOST
+              value: "postgres-service"
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: POSTGRES_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: POSTGRES_PASSWORD
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: POSTGRES_DB
+
+---
+# 2. Create an internal network address for the backend
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: go-backend
+  ports:
+    - port: 8080
+      targetPort: 8080

@@ -1,0 +1,39 @@
+# k3s/03-frontend.yaml
+
+# 1. Deploy the React frontend container
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react-frontend
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      app: react-frontend
+  template:
+    metadata:
+      labels:
+        app: react-frontend
+    spec:
+      containers:
+        - name: react-frontend
+          # Replace with your actual GitHub username and repository name
+          image: ghcr.io/lorenzodortona/tris_inception-frontend:latest
+          # Always pull the latest image upon restart
+          imagePullPolicy: Always
+          ports:
+            # Nginx usually listens on port 80 inside the container
+            - containerPort: 80
+
+---
+# 2. Create an internal network address for the frontend
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  selector:
+    app: react-frontend
+  ports:
+    - port: 80
+      targetPort: 80
