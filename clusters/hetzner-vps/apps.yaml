@@ -4,6 +4,7 @@ metadata:
   name: tris-game
   namespace: flux-system
 spec:
+  targetNamespace: tris-game
   interval: 5m
   path: ./apps/tris-game
   prune: true # deletes resources if I delete them from repo
