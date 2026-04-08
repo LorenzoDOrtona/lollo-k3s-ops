@@ -1,0 +1,17 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: tris-game
+  namespace: flux-system
+spec:
+  interval: 5m
+  path: ./apps/tris-game
+  prune: true # deletes resources if I delete them from repo
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  #To use SOPS with secrets 
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age # Private key secret name
