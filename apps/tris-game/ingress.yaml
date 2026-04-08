@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: main-ingress
-  namespace: default
+  namespace: tris-game
   annotations:
     # Triggers cert-manager to request a certificate from Let's Encrypt
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
