@@ -1,0 +1,9 @@
+# .sops.yaml
+# SOPS configuration file defining creation rules
+creation_rules:
+  # Apply this rule to any file ending in .enc.yaml
+  - path_regex: apps/tris-game/secrets/.*\.yaml$
+    # The value below is my actual public key
+    age: 'age14smmwkjwd7tjlnlapft5n0msnylr4c2z5dfnvk6pw4rem6jfdsjqy0mgs3'
+    # Only encrypt the data values, keep Kubernetes metadata readable
+    encrypted_regex: '^(data|stringData)$'
