@@ -32,6 +32,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frontend-service
+  namespace: tris-game
 spec:
   selector:
     app: react-frontend
