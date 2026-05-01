@@ -1,5 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - cluster-issuer.yaml
-  - ../tailscale
+  - namespace.yaml
+  - source.yaml
+  - release.yaml
+  - secrets.enc.yaml

@@ -4,3 +4,4 @@ resources:
   - ./flux-system
   - infra.yaml
   - apps.yaml
+  - music-server.yaml

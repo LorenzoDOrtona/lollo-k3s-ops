@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spotdl
+  namespace: music-server
+spec:
+  selector:
+    matchLabels:
+      app: spotdl
+  template:
+    metadata:
+      labels:
+        app: spotdl
+    spec:
+      containers:
+      - name: spotdl
+        image: vix9/spotdl-gui:latest
+        ports:
+        - containerPort: 8800
+        volumeMounts:
+        - name: music-data
+          mountPath: /music
+      volumes:
+      - name: music-data
+        persistentVolumeClaim:
+          claimName: music-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spotdl-service
+  namespace: music-server
+spec:
+  selector:
+    app: spotdl
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8800

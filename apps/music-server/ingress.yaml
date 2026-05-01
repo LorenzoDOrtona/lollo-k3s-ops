@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: music-ingress
+  namespace: music-server
+  annotations:
+    # This tells Tailscale to use these hostnames in your tailnet
+    tailscale.com/hostname: "music"
+spec:
+  ingressClassName: tailscale
+  rules:
+  - host: navidrome
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: navidrome-service
+            port:
+              number: 80
+  - host: spotdl
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: spotdl-service
+            port:
+              number: 80
