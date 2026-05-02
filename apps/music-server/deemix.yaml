@@ -1,39 +1,44 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: spotdl
+  name: deemix
   namespace: music-server
 spec:
   selector:
     matchLabels:
-      app: spotdl
+      app: deemix
   template:
     metadata:
       labels:
-        app: spotdl
+        app: deemix
     spec:
       containers:
-      - name: spotdl
-        image: nozwock/spotdl-gui:latest
+      - name: deemix
+        image: eversunny/deemix-gui:latest
         ports:
-        - containerPort: 8800
+        - containerPort: 6595
         volumeMounts:
         - name: music-data
           mountPath: /music
+        - name: deemix-config
+          mountPath: /config
       volumes:
       - name: music-data
         persistentVolumeClaim:
           claimName: music-pvc
+      - name: deemix-config
+        persistentVolumeClaim:
+          claimName: deemix-config-pvc
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: spotdl-service
+  name: deemix-service
   namespace: music-server
 spec:
   selector:
-    app: spotdl
+    app: deemix
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8800
+      targetPort: 6595

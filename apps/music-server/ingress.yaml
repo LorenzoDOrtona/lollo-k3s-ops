@@ -8,7 +8,7 @@ spec:
   tls:
   - hosts:
     - navidrome
-    - spotdl 
+    - deemix
   rules:
   - host: navidrome
     http:
@@ -20,13 +20,13 @@ spec:
             name: navidrome-service
             port:
               number: 80
-  - host: spotdl
+  - host: deemix
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: spotdl-service
+            name: deemix-service
             port:
               number: 80
