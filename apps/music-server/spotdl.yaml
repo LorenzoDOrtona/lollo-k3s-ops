@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: spotdl
-        image: vix9/spotdl-gui:latest
+        image: nozwock/spotdl-gui:latest
         ports:
         - containerPort: 8800
         volumeMounts:
