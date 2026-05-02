@@ -25,7 +25,7 @@ spec:
         - name: COOKIES_FILE
           value: /app/cookies.txt
         - name: YTDL_OPTIONS
-          value: '{"nocheckcertificate": true, "quiet": false, "no_warnings": false, "source_address": "0.0.0.0"}'
+          value: '{"nocheckcertificate": true, "quiet": false, "no_warnings": false, "source_address": "0.0.0.0", "cookiefile": "/app/cookies.txt"}'
         volumeMounts:
         - name: music-data
           mountPath: /downloads
