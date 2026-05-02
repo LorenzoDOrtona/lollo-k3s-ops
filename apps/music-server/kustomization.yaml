@@ -7,4 +7,6 @@ resources:
   - navidrome.yaml
   - ingress.yaml
   - spotdl-ingress.yaml
+  - metube.yaml
+  - metube-ingress.yaml
   - secrets/spotify-tokens.enc.yaml

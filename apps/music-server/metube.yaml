@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metube
+  namespace: music-server
+spec:
+  selector:
+    matchLabels:
+      app: metube
+  template:
+    metadata:
+      labels:
+        app: metube
+    spec:
+      containers:
+      - name: metube
+        image: alexta69/metube
+        ports:
+        - containerPort: 8081
+        env:
+        - name: DOWNLOAD_DIR
+          value: /downloads
+        - name: AUDIO_DOWNLOAD_DIR
+          value: /downloads
+        volumeMounts:
+        - name: music-data
+          mountPath: /downloads
+      volumes:
+      - name: music-data
+        persistentVolumeClaim:
+          claimName: music-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: metube-service
+  namespace: music-server
+spec:
+  selector:
+    app: metube
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8081
