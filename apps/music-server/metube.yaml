@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: metube
-        image: alexta69/metube
+        image: alexta69/metube:latest
         ports:
         - containerPort: 8081
         env:
@@ -22,6 +22,8 @@ spec:
           value: /downloads
         - name: AUDIO_DOWNLOAD_DIR
           value: /downloads
+        - name: YTDL_OPTIONS
+          value: '{"nocheckcertificate": true, "quiet": false, "no_warnings": false, "source_address": "0.0.0.0"}'
         volumeMounts:
         - name: music-data
           mountPath: /downloads
