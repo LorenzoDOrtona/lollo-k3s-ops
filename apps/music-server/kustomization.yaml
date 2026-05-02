@@ -10,3 +10,4 @@ resources:
   - metube.yaml
   - metube-ingress.yaml
   - secrets/spotify-tokens.enc.yaml
+  - secrets/metube-cookies.enc.yaml

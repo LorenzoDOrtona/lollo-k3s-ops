@@ -22,15 +22,23 @@ spec:
           value: /downloads
         - name: AUDIO_DOWNLOAD_DIR
           value: /downloads
+        - name: COOKIES_FILE
+          value: /app/cookies.txt
         - name: YTDL_OPTIONS
           value: '{"nocheckcertificate": true, "quiet": false, "no_warnings": false, "source_address": "0.0.0.0"}'
         volumeMounts:
         - name: music-data
           mountPath: /downloads
+        - name: cookies
+          mountPath: /app/cookies.txt
+          subPath: cookies.txt
       volumes:
       - name: music-data
         persistentVolumeClaim:
           claimName: music-pvc
+      - name: cookies
+        secret:
+          secretName: metube-cookies
 ---
 apiVersion: v1
 kind: Service
