@@ -18,6 +18,12 @@ spec:
         args: ["web", "--host", "0.0.0.0", "--web-use-output-dir"]
         ports:
         - containerPort: 8800
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8800
+          initialDelaySeconds: 5
+          periodSeconds: 10
         volumeMounts:
         - name: music-data
           mountPath: /music
@@ -42,5 +48,5 @@ spec:
     app: spotdl
   ports:
     - protocol: TCP
-      port: 80
+      port: 8800
       targetPort: 8800
