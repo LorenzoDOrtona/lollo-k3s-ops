@@ -3,6 +3,6 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - pvc.yaml
-  - deemix.yaml
+  - spotdl.yaml
   - navidrome.yaml
   - ingress.yaml

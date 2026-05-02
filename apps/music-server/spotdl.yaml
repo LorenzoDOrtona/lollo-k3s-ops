@@ -1,44 +1,46 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: deemix
+  name: spotdl
   namespace: music-server
 spec:
   selector:
     matchLabels:
-      app: deemix
+      app: spotdl
   template:
     metadata:
       labels:
-        app: deemix
+        app: spotdl
     spec:
       containers:
-      - name: deemix
-        image: eversunny/deemix-gui:latest
+      - name: spotdl
+        image: spotdl/spotify-downloader
+        args: ["web", "--host", "0.0.0.0", "--web-use-output-dir"]
         ports:
-        - containerPort: 6595
+        - containerPort: 8800
         volumeMounts:
         - name: music-data
           mountPath: /music
-        - name: deemix-config
-          mountPath: /config
+        - name: spotdl-config
+          mountPath: /root/.config/spotdl
+        workingDir: /music
       volumes:
       - name: music-data
         persistentVolumeClaim:
           claimName: music-pvc
-      - name: deemix-config
+      - name: spotdl-config
         persistentVolumeClaim:
-          claimName: deemix-config-pvc
+          claimName: spotdl-config-pvc
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: deemix-service
+  name: spotdl-service
   namespace: music-server
 spec:
   selector:
-    app: deemix
+    app: spotdl
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 6595
+      targetPort: 8800

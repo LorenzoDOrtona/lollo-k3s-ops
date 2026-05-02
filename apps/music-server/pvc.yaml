@@ -13,7 +13,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: deemix-config-pvc
+  name: spotdl-config-pvc
   namespace: music-server
 spec:
   accessModes:
