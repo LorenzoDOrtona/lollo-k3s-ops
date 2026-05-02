@@ -12,17 +12,35 @@ spec:
       labels:
         app: spotdl
     spec:
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - navidrome
+            topologyKey: "kubernetes.io/hostname"
       containers:
       - name: spotdl
         image: spotdl/spotify-downloader
         args: ["web", "--host", "0.0.0.0"]
         ports:
         - containerPort: 8800
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
         readinessProbe:
           tcpSocket:
             port: 8800
-          initialDelaySeconds: 5
-          periodSeconds: 10
+          initialDelaySeconds: 15
+          periodSeconds: 20
+          failureThreshold: 5
         volumeMounts:
         - name: music-data
           mountPath: /music
