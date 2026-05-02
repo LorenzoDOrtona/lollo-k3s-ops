@@ -6,3 +6,4 @@ resources:
   - spotdl.yaml
   - navidrome.yaml
   - ingress.yaml
+  - spotdl-ingress.yaml

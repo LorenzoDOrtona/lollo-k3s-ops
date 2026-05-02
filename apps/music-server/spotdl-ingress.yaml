@@ -1,21 +1,21 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: navidrome-ingress
+  name: spotdl-ingress
   namespace: music-server
 spec:
   ingressClassName: tailscale
   tls:
   - hosts:
-    - navidrome
+    - spotdl
   rules:
-  - host: navidrome
+  - host: spotdl
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: navidrome-service
+            name: spotdl-service
             port:
               number: 80
