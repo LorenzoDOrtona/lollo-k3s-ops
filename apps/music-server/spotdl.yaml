@@ -27,10 +27,25 @@ spec:
       containers:
       - name: spotdl
         image: spotdl/spotify-downloader
-        args: ["web", "--host", "0.0.0.0"]
+        args:
+        - web
+        - --host
+        - 0.0.0.0
+        - --keep-alive
+        - --web-use-output-dir
+        env:
+        - name: SPOTIPY_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: spotify-secret
+              key: SPOTIPY_CLIENT_ID
+        - name: SPOTIPY_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: spotify-secret
+              key: SPOTIPY_CLIENT_SECRET
         ports:
         - containerPort: 8800
-        workingDir: /music
         resources:
           requests:
             memory: "256Mi"
