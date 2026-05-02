@@ -18,4 +18,4 @@ spec:
           service:
             name: spotdl-service
             port:
-              number: 8800
+              number: 80

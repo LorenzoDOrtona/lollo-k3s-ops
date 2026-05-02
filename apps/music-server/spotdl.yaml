@@ -15,12 +15,11 @@ spec:
       containers:
       - name: spotdl
         image: spotdl/spotify-downloader
-        args: ["web", "--host", "0.0.0.0", "--web-use-output-dir"]
+        args: ["web", "--host", "0.0.0.0"]
         ports:
         - containerPort: 8800
         readinessProbe:
-          httpGet:
-            path: /
+          tcpSocket:
             port: 8800
           initialDelaySeconds: 5
           periodSeconds: 10
@@ -48,5 +47,5 @@ spec:
     app: spotdl
   ports:
     - protocol: TCP
-      port: 8800
+      port: 80
       targetPort: 8800
