@@ -3,11 +3,12 @@ kind: Ingress
 metadata:
   name: music-ingress
   namespace: music-server
-  annotations:
-    # This tells Tailscale to use these hostnames in your tailnet
-    tailscale.com/hostname: "music"
 spec:
   ingressClassName: tailscale
+  tls:
+  - host:
+    - navidrome
+    - spotdl 
   rules:
   - host: navidrome
     http:
