@@ -9,5 +9,11 @@ resources:
   - spotdl-ingress.yaml
   - metube.yaml
   - metube-ingress.yaml
+  - tagger-cronjob.yaml
   - secrets/spotify-tokens.enc.yaml
   - secrets/metube-cookies.enc.yaml
+
+configMapGenerator:
+  - name: music-tagger-script
+    files:
+      - tagger-script.py
