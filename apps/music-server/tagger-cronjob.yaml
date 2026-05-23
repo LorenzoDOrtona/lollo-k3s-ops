@@ -27,8 +27,8 @@ spec:
             - /bin/sh
             - -c
             - |
-              apt-get update && apt-get install -y ffmpeg
-              pip install requests musicbrainzngs mutagen
+              apt-get update && apt-get install -y ffmpeg chromaprint-tools
+              pip install requests musicbrainzngs mutagen acoustid Pillow
               python /app/tagger-script.py
             volumeMounts:
             - name: music-data
