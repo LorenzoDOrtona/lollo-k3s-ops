@@ -22,13 +22,13 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
           containers:
           - name: tagger
-            image: python:3.9-slim
+            image: python:3.11-slim
             command:
             - /bin/sh
             - -c
             - |
-              apt-get update && apt-get install -y ffmpeg chromaprint-tools
-              pip install requests musicbrainzngs mutagen acoustid Pillow
+              apt-get update && apt-get install -y ffmpeg libchromaprint-tools
+              pip install requests musicbrainzngs mutagen pyacoustid Pillow
               python /app/tagger-script.py
             volumeMounts:
             - name: music-data
