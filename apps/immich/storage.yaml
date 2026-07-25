@@ -1,0 +1,55 @@
+# 1. VOLUME E CLAIM PER LE FOTO/VIDEO (Libreria Multimediale)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: immich-library-pv
+spec:
+  capacity:
+    storage: 1000Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: das-storage
+  hostPath:
+    path: /mnt/das-storage/immich/library
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: immich-library-pvc
+  namespace: immich
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: das-storage
+  resources:
+    requests:
+      storage: 1000Gi
+---
+# 2. VOLUME E CLAIM PER IL DATABASE POSTGRESQL
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: immich-postgres-pv
+spec:
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: das-storage
+  hostPath:
+    path: /mnt/das-storage/immich/postgres
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: immich-postgres-pvc
+  namespace: immich
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: das-storage
+  resources:
+    requests:
+      storage: 50Gi

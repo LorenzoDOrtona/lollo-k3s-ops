@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: immich-ingress
+  namespace: immich
+spec:
+  ingressClassName: tailscale
+  tls:
+    - hosts:
+        - immich
+  rules:
+    - host: immich
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: immich-server # Il nome del servizio creato dal chart Helm
+                port:
+                  number: 2283 # La porta web di default di Immich
