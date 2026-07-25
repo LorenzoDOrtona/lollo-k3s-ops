@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: immich
-      version: "0.8.2" # VERSIONE BLOCCATA (Pinning) per proteggere il server da breaking changes automatiche
+      version: "0.8.2" # LOCKED VERSION (Pinning) to protect the server from automatic breaking changes
       sourceRef:
         kind: HelmRepository
         name: immich-charts
@@ -24,13 +24,13 @@ spec:
       - secretRef:
           name: immich-secret
           
-    # Diciamo al Server e Microservizi Immich di agganciarsi al PVC sul disco DAS
+    # Tell Immich Server and Microservices to attach to the PVC on the DAS disk
     immich:
       persistence:
         library:
           existingClaim: immich-library-pvc
           
-    # Configurazione di PostgreSQL (con estensione pgvecto-rs) collegato al PVC sul disco DAS
+    # PostgreSQL configuration (with pgvecto-rs extension) attached to the PVC on the DAS disk
     postgresql:
       enabled: true
       image:
