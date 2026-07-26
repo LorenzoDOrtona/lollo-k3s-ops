@@ -52,7 +52,7 @@ spec:
         TIME_ZONE: "Europe/Rome"
         SEAFILE_LOG_TO_STDOUT: "true"
         SITE_ROOT: "/"
-        SEAFILE_SERVER_HOSTNAME: "seafile.lorenzodortona.com"  # Hostname FQDN ufficiale Seafile
+        SEAFILE_SERVER_HOSTNAME: "seafile.tail888a9f.ts.net"  # Hostname FQDN MagicDNS Tailscale
         SEAFILE_SERVER_PROTOCOL: "https"
 
         # Database
