@@ -1,0 +1,81 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: seafile-charts
+  namespace: seafile
+spec:
+  interval: 1h
+  url: https://haiwen.github.io/seafile-helm-chart/repo
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: seafile
+  namespace: seafile
+spec:
+  interval: 1h
+  timeout: 5m
+  chart:
+    spec:
+      chart: ce
+      version: "13.0.3"
+      sourceRef:
+        kind: HelmRepository
+        name: seafile-charts
+        namespace: seafile
+  releaseName: seafile
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    seafile:
+      initMode: true  # Impostare su false dopo la prima installazione riuscita
+
+      # Mappatura dei Secret: l'email admin e tutte le secret provengono dal Secret cifrato (SOPS)
+      secretsMap:
+        INIT_SEAFILE_ADMIN_EMAIL:
+          secret: seafile-secret
+          key: INIT_SEAFILE_ADMIN_EMAIL
+
+      configs:
+        image: seafileltd/seafile-mc:13.0-latest
+        seafileDataVolume:
+          storage: 1000Gi
+          storageClassName: "das-storage"
+
+      env:
+        # Seafile server
+        TIME_ZONE: "Europe/Rome"
+        SEAFILE_LOG_TO_STDOUT: "true"
+        SITE_ROOT: "/"
+        SEAFILE_SERVER_HOSTNAME: "seafile"  # Hostname Tailscale
+        SEAFILE_SERVER_PROTOCOL: "https"
+
+        # Database
+        SEAFILE_MYSQL_DB_HOST: "seafile-mariadb"
+        SEAFILE_MYSQL_DB_PORT: "3306"
+        SEAFILE_MYSQL_DB_USER: "seafile"
+        SEAFILE_MYSQL_DB_CCNET_DB_NAME: "ccnet_db"
+        SEAFILE_MYSQL_DB_SEAFILE_DB_NAME: "seafile_db"
+        SEAFILE_MYSQL_DB_SEAHUB_DB_NAME: "seahub_db"
+
+        # Cache
+        CACHE_PROVIDER: "redis"
+        REDIS_HOST: "seafile-redis"
+        REDIS_PORT: "6379"
+        MEMCACHED_HOST: ""
+        MEMCACHED_PORT: "11211"
+
+        # Caratteristiche opzionali (disabilitate)
+        ENABLE_NOTIFICATION_SERVER: "false"
+        NOTIFICATION_SERVER_URL: ""
+        ENABLE_SEADOC: "false"
+        SEADOC_SERVER_URL: ""
+        ENABLE_SEAFILE_AI: "false"
+        ENABLE_FACE_RECOGNITION: "false"
+        SEAFILE_AI_SERVER_URL: ""
+        MD_FILE_COUNT_LIMIT: "100000"

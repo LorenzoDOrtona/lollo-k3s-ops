@@ -1,0 +1,55 @@
+# 1. VOLUME AND CLAIM FOR SEAFILE DATA (1 TB)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: seafile-data-pv
+spec:
+  capacity:
+    storage: 1000Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: das-storage
+  hostPath:
+    path: /mnt/das-storage/seafile/data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: seafile-data-pvc
+  namespace: seafile
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: das-storage
+  resources:
+    requests:
+      storage: 1000Gi
+---
+# 2. VOLUME AND CLAIM FOR DATABASE (MariaDB / MySQL)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: seafile-db-pv
+spec:
+  capacity:
+    storage: 25Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: das-storage
+  hostPath:
+    path: /mnt/das-storage/seafile/db
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: seafile-db-pvc
+  namespace: seafile
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: das-storage
+  resources:
+    requests:
+      storage: 25Gi
