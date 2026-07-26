@@ -22,6 +22,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   storageClassName: das-storage
+  volumeName: seafile-data-pv
   resources:
     requests:
       storage: 1000Gi
@@ -50,6 +51,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   storageClassName: das-storage
+  volumeName: seafile-db-pv
   resources:
     requests:
       storage: 25Gi

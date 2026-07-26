@@ -35,7 +35,7 @@ spec:
     seafile:
       initMode: true  # Impostare su false dopo la prima installazione riuscita
 
-      # Mappatura dei Secret: l'email admin e tutte le secret provengono dal Secret cifrato (SOPS)
+      # Mappatura dei Secret: le credenziali provengono dal Secret cifrato (SOPS)
       secretsMap:
         INIT_SEAFILE_ADMIN_EMAIL:
           secret: seafile-secret
@@ -69,6 +69,9 @@ spec:
         REDIS_PORT: "6379"
         MEMCACHED_HOST: ""
         MEMCACHED_PORT: "11211"
+
+        # Initialization (richiesto non vuoto dalla validazione del template Helm)
+        INIT_SEAFILE_ADMIN_EMAIL: "admin@seafile.local"
 
         # Caratteristiche opzionali (disabilitate)
         ENABLE_NOTIFICATION_SERVER: "false"
