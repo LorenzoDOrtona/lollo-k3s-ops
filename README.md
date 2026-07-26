@@ -39,3 +39,34 @@ The cluster hosts my custom-built applications, demonstrating full-stack Kuberne
 ```bash
 kubectl -n music-server create job --from=cronjob/music-tagger manual-tagging-$(date +%s)
 ```
+
+### 💾 Host Storage Setup (Btrfs Quotas & NOCOW)
+
+The persistent storage disk (`/mnt/das-storage`) uses **Btrfs**. To ensure service isolation and prevent database fragmentation, the host storage is configured with Btrfs Subvolumes, Quotas (`qgroup`), and NOCOW (`chattr +C`).
+
+#### 1. Btrfs Subvolumes & Quotas
+Subvolumes isolate Immich and Seafile and enforce strict disk space limits to prevent one service from filling the host disk:
+```bash
+# Enable quota management on the Btrfs mount
+sudo btrfs quota enable /mnt/das-storage
+
+# Set hard quota limits (700GB for Immich, 1000GB for Seafile)
+sudo btrfs qgroup limit 700G /mnt/das-storage/immich/library
+sudo btrfs qgroup limit 1000G /mnt/das-storage/seafile/data
+
+# Check quota usage and limits
+sudo btrfs qgroup show -p /mnt/das-storage
+```
+
+#### 2. Database NOCOW Configuration (`chattr +C`)
+Btrfs Copy-on-Write (CoW) causes severe disk fragmentation and performance degradation for write-heavy databases (PostgreSQL and MariaDB). NOCOW (`+C`) is set on the database directories:
+```bash
+# Disable CoW on PostgreSQL (Immich) and MariaDB (Seafile) directories
+sudo chattr +C /mnt/das-storage/immich/postgres
+sudo chattr +C /mnt/das-storage/seafile/db
+
+# Verify that the 'C' attribute is active
+lsattr -d /mnt/das-storage/immich/postgres /mnt/das-storage/seafile/db
+```
+> **Note**: `chattr +C` must be applied to empty directories before files are written into them.
+
