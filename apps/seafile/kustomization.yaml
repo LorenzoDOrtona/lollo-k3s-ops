@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - storage.yaml
+  - database.yaml
   - HelmRelease.yaml
   - ingress.yaml
   - secrets/seafile-secrets.enc.yaml

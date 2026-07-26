@@ -33,7 +33,7 @@ spec:
       retries: 3
   values:
     seafile:
-      initMode: false  # Disable initMode after first-time initialization to start Seafile services
+      initMode: true  # Must be true on first launch to populate MariaDB tables
 
       # Mappatura dei Secret: le credenziali provengono dal Secret cifrato (SOPS)
       secretsMap:
