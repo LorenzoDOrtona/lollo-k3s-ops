@@ -33,7 +33,7 @@ spec:
       retries: 3
   values:
     seafile:
-      initMode: true  # Impostare su false dopo la prima installazione riuscita
+      initMode: false  # Disable initMode after first-time initialization to start Seafile services
 
       # Mappatura dei Secret: le credenziali provengono dal Secret cifrato (SOPS)
       secretsMap:
