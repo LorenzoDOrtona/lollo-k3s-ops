@@ -21,7 +21,7 @@ spec:
 
       containers:
       - name: sunshine
-        image: lscr.io/linuxserver/sunshine:latest
+        image: docker.io/linuxserver/sunshine:latest
         securityContext:
           # privileged è necessario per /dev/uinput (gamepad/mouse virtuali)
           # e per l'accesso al DRI device dell'Intel iGPU (VAAPI)
