@@ -22,14 +22,15 @@ spec:
       # funzionano correttamente dietro NAT di Kubernetes senza hostNetwork.
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
-      # fsGroup fa sì che Kubernetes chowni automaticamente tutti i volumi montati
-      # al gruppo 1000 (lizard), così Sunshine può scrivere config e credentials.
-      securityContext:
-        fsGroup: 1000
+
+      # ghcr-secret: credenziali per pullare lscr.io (redirect verso ghcr.io).
+      # Gestito via SOPS in apps/sunshine/secrets/ghcr-secret.yaml
+      imagePullSecrets:
+      - name: ghcr-secret
 
       initContainers:
       # Corregge i permessi di /dev/uinput prima che Sunshine parta.
-      # uinput di default è root:input mode 0660; Sunshine gira come utente lizard (UID 1000).
+      # uinput di default è root:input mode 0660; Sunshine gira come utente abc (UID 1000).
       - name: uinput-chmod
         image: busybox:1.36
         command: ["sh", "-c", "chmod 0666 /dev/uinput"]
@@ -39,63 +40,38 @@ spec:
         - name: uinput
           mountPath: /dev/uinput
 
-
       containers:
-      # --- Sidecar: Xvfb virtual display ---
-      # Avvia un X server virtuale su :99 (1920x1080 24bpp).
-      # Sunshine lo trova tramite la variabile DISPLAY=:99 impostata nel container principale.
-      # Il socket X è condiviso tra i due container tramite il volume xsocket.
-      - name: xvfb
-        image: docker.io/alpine:3.20
-        command:
-        - sh
-        - -c
-        - |
-          apk add --no-cache xvfb && \
-          Xvfb :99 -screen 0 1920x1080x24 -ac +extension GLX +render -noreset
-        securityContext:
-          privileged: true
-        volumeMounts:
-        - name: xsocket
-          mountPath: /tmp/.X11-unix
-
-      # --- Container principale: Sunshine ---
       - name: sunshine
-        # lizardbyte/sunshine è l'immagine ufficiale upstream (LizardByte team).
-        image: docker.io/lizardbyte/sunshine:latest-ubuntu-24.04
-        # Aspetta che il sidecar Xvfb crei il socket X prima di avviare Sunshine.
-        # Poi forza capture=x11 nella config — di default Sunshine usa portalgrab
-        # (XDG Portal/Pipewire) che richiede dbus, non disponibile senza desktop session.
-        command:
-        - sh
-        - -c
-        - |
-          # Installa le librerie mancanti nell'immagine upstream
-          apt-get update -qq && apt-get install -y --no-install-recommends \
-            libxrandr2 libavahi-common3 libavahi-client3 2>/dev/null
-          # Aspetta che il sidecar Xvfb crei il socket X prima di avviare Sunshine
-          until [ -S /tmp/.X11-unix/X99 ]; do sleep 0.5; done
-          # Forza capture=x11 — di default Sunshine usa portalgrab (XDG Portal/Pipewire)
-          # che richiede dbus, non disponibile senza desktop session
-          mkdir -p /home/lizard/.config/sunshine
-          cat > /home/lizard/.config/sunshine/sunshine.conf <<'EOF'
-          capture=x11
-          EOF
-          exec sunshine
+        # lscr.io/linuxserver/sunshine: immagine LinuxServer con KasmVNC + Xvfb integrati.
+        # Progettata per uso headless containerizzato — include tutte le X11 libs.
+        # Richiede auth su ghcr.io → imagePullSecret ghcr-secret.
+        image: lscr.io/linuxserver/sunshine:latest
         securityContext:
+          # privileged è necessario per /dev/uinput (gamepad/mouse virtuali)
+          # e per l'accesso al DRI device dell'Intel iGPU (VAAPI)
           privileged: true
-          # runAsUser: 0 necessario perché fsGroup non si applica ai volumi hostPath su k3s.
-          # Il container è già privileged, quindi girare come root non aggiunge rischi.
-          runAsUser: 0
+
         env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
         - name: TZ
           value: "Europe/Rome"
-        # Punta al display virtuale avviato dal sidecar Xvfb
+        # X server virtuale interno al container linuxserver/sunshine (KasmVNC su :1)
+        # Senza questo Sunshine cerca Wayland/DRM e non trova un desktop da catturare
         - name: DISPLAY
-          value: ":99"
-        # Necessario per Qt/tray e per evitare warning XDG_RUNTIME_DIR
-        - name: XDG_RUNTIME_DIR
-          value: "/tmp/runtime-root"
+          value: ":1"
+        # Risoluzione del display virtuale
+        - name: CUSTOM_RES_W
+          value: "1920"
+        - name: CUSTOM_RES_H
+          value: "1080"
+        - name: CUSTOM_REFRESH_RATE
+          value: "60"
+        # PulseAudio socket per audio virtuale interno al container
+        - name: PULSE_SERVER
+          value: "unix:/tmp/pulse/pulse-socket"
 
         ports:
         # Web UI (accessibile via Tailscale ingress)
@@ -126,9 +102,8 @@ spec:
           protocol: UDP
 
         volumeMounts:
-        # lizardbyte/sunshine legge la config da /home/lizard/.config/sunshine
         - name: config
-          mountPath: /home/lizard/.config/sunshine
+          mountPath: /config
         - name: roms
           mountPath: /roms
         # Intel iGPU per VAAPI hardware encoding (H.264/HEVC)
@@ -137,9 +112,6 @@ spec:
         # uinput per emulare gamepad/mouse/tastiera virtuali verso Moonlight
         - name: uinput
           mountPath: /dev/uinput
-        # Socket X condiviso con il sidecar Xvfb
-        - name: xsocket
-          mountPath: /tmp/.X11-unix
         # Shared memory dedicata per video capture ad alte performance
         - name: shm
           mountPath: /dev/shm
@@ -169,9 +141,6 @@ spec:
         hostPath:
           path: /dev/uinput
           type: CharDevice
-      # Socket X condiviso tra Xvfb e Sunshine
-      - name: xsocket
-        emptyDir: {}
       # /dev/shm: shared memory dedicata (non condivide quella dell'host)
       - name: shm
         emptyDir:
