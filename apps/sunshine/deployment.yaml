@@ -8,6 +8,10 @@ spec:
   selector:
     matchLabels:
       app: sunshine
+  # Recreate è obbligatorio con hostNetwork: true — il rolling update
+  # causerebbe FailedScheduling perché le porte host sono già occupate dal vecchio pod.
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
@@ -21,33 +25,17 @@ spec:
 
       containers:
       - name: sunshine
-        image: docker.io/linuxserver/sunshine:latest
+        # lizardbyte/sunshine è l'immagine ufficiale upstream (LizardByte team).
+        # Usata al posto di lscr.io/linuxserver/sunshine che richiede auth ghcr.io.
+        image: docker.io/lizardbyte/sunshine:latest-ubuntu-24.04
         securityContext:
           # privileged è necessario per /dev/uinput (gamepad/mouse virtuali)
           # e per l'accesso al DRI device dell'Intel iGPU (VAAPI)
           privileged: true
 
         env:
-        - name: PUID
-          value: "1000"
-        - name: PGID
-          value: "1000"
         - name: TZ
           value: "Europe/Rome"
-        # X server virtuale interno al container linuxserver/sunshine (KasmVNC su :1)
-        # Senza questo Sunshine cerca Wayland/DRM e non trova un desktop da catturare
-        - name: DISPLAY
-          value: ":1"
-        # Risoluzione del display virtuale (cambia in base al tuo monitor/preferenza)
-        - name: CUSTOM_RES_W
-          value: "1920"
-        - name: CUSTOM_RES_H
-          value: "1080"
-        - name: CUSTOM_REFRESH_RATE
-          value: "60"
-        # PulseAudio socket per audio virtuale interno al container
-        - name: PULSE_SERVER
-          value: "unix:/tmp/pulse/pulse-socket"
 
         ports:
         # Web UI (accessibile via Tailscale ingress)
@@ -78,17 +66,18 @@ spec:
           protocol: UDP
 
         volumeMounts:
+        # lizardbyte/sunshine legge la config da /etc/sunshine
         - name: config
-          mountPath: /config
+          mountPath: /etc/sunshine
         - name: roms
           mountPath: /roms
-        # Intel iGPU per VAAPI hardware encoding
+        # Intel iGPU per VAAPI hardware encoding (H.264/HEVC)
         - name: dri
           mountPath: /dev/dri
         # uinput per emulare gamepad/mouse/tastiera virtuali verso Moonlight
         - name: uinput
           mountPath: /dev/uinput
-        # Shared memory per video capture
+        # Shared memory dedicata per video capture ad alte performance
         - name: shm
           mountPath: /dev/shm
 
@@ -117,11 +106,11 @@ spec:
         hostPath:
           path: /dev/uinput
           type: CharDevice
-      # /dev/shm: shared memory per cattura video ad alte performance
+      # /dev/shm: shared memory dedicata (non condivide quella dell'host)
       - name: shm
-        hostPath:
-          path: /dev/shm
-          type: Directory
+        emptyDir:
+          medium: Memory
+          sizeLimit: 256Mi
 ---
 # Service solo per la Web UI (47990/TCP) — lo streaming UDP
 # bypassa il Service perché usiamo hostNetwork: true
