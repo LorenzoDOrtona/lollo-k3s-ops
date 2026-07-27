@@ -34,6 +34,20 @@ spec:
           value: "1000"
         - name: TZ
           value: "Europe/Rome"
+        # X server virtuale interno al container linuxserver/sunshine (KasmVNC su :1)
+        # Senza questo Sunshine cerca Wayland/DRM e non trova un desktop da catturare
+        - name: DISPLAY
+          value: ":1"
+        # Risoluzione del display virtuale (cambia in base al tuo monitor/preferenza)
+        - name: CUSTOM_RES_W
+          value: "1920"
+        - name: CUSTOM_RES_H
+          value: "1080"
+        - name: CUSTOM_REFRESH_RATE
+          value: "60"
+        # PulseAudio socket per audio virtuale interno al container
+        - name: PULSE_SERVER
+          value: "unix:/tmp/pulse/pulse-socket"
 
         ports:
         # Web UI (accessibile via Tailscale ingress)
