@@ -70,7 +70,13 @@ spec:
         - sh
         - -c
         - |
+          # Installa le librerie mancanti nell'immagine upstream
+          apt-get update -qq && apt-get install -y --no-install-recommends \
+            libxrandr2 libavahi-common3 libavahi-client3 2>/dev/null
+          # Aspetta che il sidecar Xvfb crei il socket X prima di avviare Sunshine
           until [ -S /tmp/.X11-unix/X99 ]; do sleep 0.5; done
+          # Forza capture=x11 — di default Sunshine usa portalgrab (XDG Portal/Pipewire)
+          # che richiede dbus, non disponibile senza desktop session
           mkdir -p /home/lizard/.config/sunshine
           cat > /home/lizard/.config/sunshine/sunshine.conf <<'EOF'
           capture=x11
