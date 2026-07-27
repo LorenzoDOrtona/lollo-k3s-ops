@@ -5,4 +5,3 @@ resources:
   - storage.yaml
   - deployment.yaml
   - ingress.yaml
-  - secrets/ghcr-secret.enc.yaml
