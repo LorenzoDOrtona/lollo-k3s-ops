@@ -6,3 +6,5 @@ resources:
   - immich.yaml
   - seafile.yaml
   - sunshine.yaml
+  - monitoring.yaml
+

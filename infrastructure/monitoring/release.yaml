@@ -1,0 +1,42 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kube-prometheus-stack
+  namespace: flux-system
+spec:
+  targetNamespace: monitoring
+  interval: 1h
+  chart:
+    spec:
+      chart: kube-prometheus-stack
+      version: ">= 58.0.0"
+      sourceRef:
+        kind: HelmRepository
+        name: prometheus-community
+        namespace: flux-system
+  install:
+    createNamespace: true
+    crds: CreateReplace
+  upgrade:
+    crds: CreateReplace
+  values:
+    alertmanager:
+      enabled: false
+    grafana:
+      enabled: true
+      persistence:
+        enabled: true
+        storageClassName: das-storage
+        existingClaim: grafana-pvc
+    prometheus:
+      prometheusSpec:
+        retention: 15d
+        retentionSize: "45GB"
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: das-storage
+              volumeName: prometheus-pv
+              resources:
+                requests:
+                  storage: 50Gi
