@@ -23,9 +23,9 @@ spec:
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
 
-      # initContainer: corregge i permessi di /dev/uinput prima che Sunshine parta.
-      # uinput di default è root:input mode 0660; Sunshine gira come utente lizard (UID 1000).
       initContainers:
+      # Corregge i permessi di /dev/uinput prima che Sunshine parta.
+      # uinput di default è root:input mode 0660; Sunshine gira come utente lizard (UID 1000).
       - name: uinput-chmod
         image: busybox:1.36
         command: ["sh", "-c", "chmod 0666 /dev/uinput"]
@@ -34,6 +34,16 @@ spec:
         volumeMounts:
         - name: uinput
           mountPath: /dev/uinput
+      # Il PVC config è owned da root, ma Sunshine gira come lizard (UID 1000).
+      # Questo initContainer fa chown in modo che Sunshine possa scrivere la sua config.
+      - name: config-chown
+        image: busybox:1.36
+        command: ["sh", "-c", "chown -R 1000:1000 /home/lizard/.config/sunshine"]
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+        - name: config
+          mountPath: /home/lizard/.config/sunshine
 
       containers:
       # --- Sidecar: Xvfb virtual display ---
