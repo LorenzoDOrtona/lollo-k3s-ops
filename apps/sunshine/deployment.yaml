@@ -64,8 +64,18 @@ spec:
         # lizardbyte/sunshine è l'immagine ufficiale upstream (LizardByte team).
         image: docker.io/lizardbyte/sunshine:latest-ubuntu-24.04
         # Aspetta che il sidecar Xvfb crei il socket X prima di avviare Sunshine.
-        # Senza questo wait, Sunshine parte troppo presto e non trova il display :99.
-        command: ["sh", "-c", "until [ -S /tmp/.X11-unix/X99 ]; do sleep 0.5; done && exec sunshine"]
+        # Poi forza capture=x11 nella config — di default Sunshine usa portalgrab
+        # (XDG Portal/Pipewire) che richiede dbus, non disponibile senza desktop session.
+        command:
+        - sh
+        - -c
+        - |
+          until [ -S /tmp/.X11-unix/X99 ]; do sleep 0.5; done
+          mkdir -p /home/lizard/.config/sunshine
+          cat > /home/lizard/.config/sunshine/sunshine.conf <<'EOF'
+          capture=x11
+          EOF
+          exec sunshine
         securityContext:
           privileged: true
           # runAsUser: 0 necessario perché fsGroup non si applica ai volumi hostPath su k3s.
