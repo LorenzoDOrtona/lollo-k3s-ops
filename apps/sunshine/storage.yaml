@@ -1,0 +1,55 @@
+# PersistentVolume for Sunshine config (settings, pairing data, apps.json)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: sunshine-config-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  hostPath:
+    path: /mnt/das-storage/sunshine/config
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sunshine-config-pvc
+  namespace: sunshine
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-storage
+  resources:
+    requests:
+      storage: 1Gi
+---
+# PersistentVolume for ROMs and game files
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: sunshine-roms-pv
+spec:
+  capacity:
+    storage: 200Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  hostPath:
+    path: /mnt/das-storage/sunshine/roms
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sunshine-roms-pvc
+  namespace: sunshine
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-storage
+  resources:
+    requests:
+      storage: 200Gi

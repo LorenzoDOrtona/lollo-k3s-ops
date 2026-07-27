@@ -1,0 +1,23 @@
+# Ingress Tailscale solo per la Web UI di Sunshine (https://sunshine su Tailscale)
+# Lo streaming Moonlight avviene direttamente via IP Tailscale del nodo — non passa qui.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sunshine-ingress
+  namespace: sunshine
+spec:
+  ingressClassName: tailscale
+  tls:
+    - hosts:
+        - sunshine
+  rules:
+    - host: sunshine
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: sunshine-webui
+                port:
+                  number: 47990

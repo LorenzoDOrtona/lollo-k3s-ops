@@ -1,0 +1,126 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sunshine
+  namespace: sunshine
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sunshine
+  template:
+    metadata:
+      labels:
+        app: sunshine
+    spec:
+      # hostNetwork è necessario per i pacchetti UDP dello streaming Moonlight.
+      # Sunshine usa porte UDP 47998-48000 per video/audio/control che non
+      # funzionano correttamente dietro NAT di Kubernetes senza hostNetwork.
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+
+      containers:
+      - name: sunshine
+        image: lscr.io/linuxserver/sunshine:latest
+        securityContext:
+          # privileged è necessario per /dev/uinput (gamepad/mouse virtuali)
+          # e per l'accesso al DRI device dell'Intel iGPU (VAAPI)
+          privileged: true
+
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "Europe/Rome"
+
+        ports:
+        # Web UI (accessibile via Tailscale ingress)
+        - containerPort: 47990
+          name: webui
+          protocol: TCP
+        # HTTPS stream handshake
+        - containerPort: 47984
+          name: https
+          protocol: TCP
+        # HTTP
+        - containerPort: 47989
+          name: http
+          protocol: TCP
+        # RTSP
+        - containerPort: 48010
+          name: rtsp
+          protocol: TCP
+        # Video/Audio/Control UDP (Moonlight li usa per lo stream)
+        - containerPort: 47998
+          name: video
+          protocol: UDP
+        - containerPort: 47999
+          name: control
+          protocol: UDP
+        - containerPort: 48000
+          name: audio
+          protocol: UDP
+
+        volumeMounts:
+        - name: config
+          mountPath: /config
+        - name: roms
+          mountPath: /roms
+        # Intel iGPU per VAAPI hardware encoding
+        - name: dri
+          mountPath: /dev/dri
+        # uinput per emulare gamepad/mouse/tastiera virtuali verso Moonlight
+        - name: uinput
+          mountPath: /dev/uinput
+        # Shared memory per video capture
+        - name: shm
+          mountPath: /dev/shm
+
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+          limits:
+            cpu: "4000m"
+            memory: "4Gi"
+
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: sunshine-config-pvc
+      - name: roms
+        persistentVolumeClaim:
+          claimName: sunshine-roms-pvc
+      # /dev/dri: Intel HD 530 iGPU per VAAPI (encoding H.264/HEVC)
+      - name: dri
+        hostPath:
+          path: /dev/dri
+          type: Directory
+      # /dev/uinput: input virtuale per gamepad Moonlight
+      - name: uinput
+        hostPath:
+          path: /dev/uinput
+          type: CharDevice
+      # /dev/shm: shared memory per cattura video ad alte performance
+      - name: shm
+        hostPath:
+          path: /dev/shm
+          type: Directory
+---
+# Service solo per la Web UI (47990/TCP) — lo streaming UDP
+# bypassa il Service perché usiamo hostNetwork: true
+apiVersion: v1
+kind: Service
+metadata:
+  name: sunshine-webui
+  namespace: sunshine
+spec:
+  selector:
+    app: sunshine
+  ports:
+    - protocol: TCP
+      port: 47990
+      targetPort: 47990
+      name: webui

@@ -5,3 +5,4 @@ resources:
   - tailscale.yaml
   - immich.yaml
   - seafile.yaml
+  - sunshine.yaml
