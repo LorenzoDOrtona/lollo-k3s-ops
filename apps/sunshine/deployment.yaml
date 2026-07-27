@@ -63,6 +63,9 @@ spec:
       - name: sunshine
         # lizardbyte/sunshine è l'immagine ufficiale upstream (LizardByte team).
         image: docker.io/lizardbyte/sunshine:latest-ubuntu-24.04
+        # Aspetta che il sidecar Xvfb crei il socket X prima di avviare Sunshine.
+        # Senza questo wait, Sunshine parte troppo presto e non trova il display :99.
+        command: ["sh", "-c", "until [ -S /tmp/.X11-unix/X99 ]; do sleep 0.5; done && exec sunshine"]
         securityContext:
           privileged: true
           # runAsUser: 0 necessario perché fsGroup non si applica ai volumi hostPath su k3s.
@@ -74,6 +77,9 @@ spec:
         # Punta al display virtuale avviato dal sidecar Xvfb
         - name: DISPLAY
           value: ":99"
+        # Necessario per Qt/tray e per evitare warning XDG_RUNTIME_DIR
+        - name: XDG_RUNTIME_DIR
+          value: "/tmp/runtime-root"
 
         ports:
         # Web UI (accessibile via Tailscale ingress)
