@@ -7,4 +7,5 @@ resources:
   - seafile.yaml
   - sunshine.yaml
   - monitoring.yaml
-
+  - filebrowser.yaml
+  - samba.yaml

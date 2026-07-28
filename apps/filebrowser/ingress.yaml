@@ -1,21 +1,21 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: grafana-ingress
-  namespace: monitoring
+  name: filebrowser-ingress
+  namespace: filebrowser
 spec:
   ingressClassName: tailscale
   tls:
     - hosts:
-        - grafana
+        - filebrowser
   rules:
-    - host: grafana
+    - host: filebrowser
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: monitoring-kube-prometheus-stack-grafana
+                name: filebrowser
                 port:
                   number: 80

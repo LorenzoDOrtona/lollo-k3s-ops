@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: rom-storage-pv
+spec:
+  capacity:
+    storage: 500Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: das-storage
+  hostPath:
+    path: /mnt/das-storage/rom-storage
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rom-storage
+  namespace: filebrowser
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: das-storage
+  volumeName: rom-storage-pv
+  resources:
+    requests:
+      storage: 500Gi

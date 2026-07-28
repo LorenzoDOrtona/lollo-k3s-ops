@@ -1,0 +1,13 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: samba
+  namespace: flux-system
+spec:
+  targetNamespace: samba
+  interval: 10m
+  path: ./apps/samba
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system

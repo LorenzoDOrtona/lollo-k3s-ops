@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: samba
+  namespace: samba
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: samba
+  template:
+    metadata:
+      labels:
+        app: samba
+    spec:
+      hostNetwork: true
+      containers:
+        - name: samba
+          image: dperson/samba:latest
+          args:
+            - "-s"
+            - "roms;/mnt/roms;yes;no;yes;all;none;all;Roms"
+            - "-u"
+            - "lollo;password123"
+          ports:
+            - containerPort: 139
+            - containerPort: 445
+          volumeMounts:
+            - name: storage
+              mountPath: /mnt/roms
+      volumes:
+        - name: storage
+          hostPath:
+            path: /mnt/das-storage/rom-storage
+            type: DirectoryOrCreate
