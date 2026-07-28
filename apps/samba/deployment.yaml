@@ -35,6 +35,7 @@ spec:
             - "$(SMB_USER);$(SMB_PASS)"
             - "-g"
             - "force user = root"
+            - "-p"
           ports:
             - containerPort: 139
             - containerPort: 445
