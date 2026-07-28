@@ -31,5 +31,5 @@ spec:
       volumes:
         - name: storage
           hostPath:
-            path: /mnt/das-storage/rom-storage
+            path: /mnt/das-storage/filebrowser/rom-storage
             type: DirectoryOrCreate

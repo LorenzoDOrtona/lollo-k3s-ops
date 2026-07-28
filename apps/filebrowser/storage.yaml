@@ -10,7 +10,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: das-storage
   hostPath:
-    path: /mnt/das-storage/rom-storage
+    path: /mnt/das-storage/filebrowser/rom-storage
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
