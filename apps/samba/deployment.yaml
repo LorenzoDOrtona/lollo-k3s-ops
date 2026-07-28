@@ -17,11 +17,22 @@ spec:
       containers:
         - name: samba
           image: dperson/samba:latest
+          env:
+            - name: SMB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: samba-auth
+                  key: username
+            - name: SMB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: samba-auth
+                  key: password
           args:
             - "-s"
             - "roms;/mnt/roms;yes;no;yes;all;none;all;Roms"
             - "-u"
-            - "lollo;password123"
+            - "$(SMB_USER);$(SMB_PASS)"
           ports:
             - containerPort: 139
             - containerPort: 445
