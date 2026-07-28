@@ -33,6 +33,8 @@ spec:
             - "roms;/mnt/roms;yes;no;yes;all;none;all;Roms"
             - "-u"
             - "$(SMB_USER);$(SMB_PASS)"
+            - "-g"
+            - "force user = root"
           ports:
             - containerPort: 139
             - containerPort: 445
