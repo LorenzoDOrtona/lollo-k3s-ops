@@ -29,5 +29,5 @@ spec:
             claimName: rom-storage
         - name: filebrowser-db
           hostPath:
-            path: /mnt/das-storage/filebrowser.db
+            path: /mnt/das-storage/filebrowser/database.db
             type: FileOrCreate
