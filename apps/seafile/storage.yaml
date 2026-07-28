@@ -5,7 +5,7 @@ metadata:
   name: seafile-data-pv
 spec:
   capacity:
-    storage: 1000Gi
+    storage: 300Gi
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
@@ -25,7 +25,7 @@ spec:
   volumeName: seafile-data-pv
   resources:
     requests:
-      storage: 1000Gi
+      storage: 300Gi
 ---
 # 2. VOLUME AND CLAIM FOR DATABASE (MariaDB / MySQL)
 apiVersion: v1
@@ -34,7 +34,7 @@ metadata:
   name: seafile-db-pv
 spec:
   capacity:
-    storage: 25Gi
+    storage: 10Gi
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
@@ -54,4 +54,4 @@ spec:
   volumeName: seafile-db-pv
   resources:
     requests:
-      storage: 25Gi
+      storage: 10Gi
