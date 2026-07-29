@@ -29,10 +29,11 @@ spec:
           mountPath: /data
       volumes:
       - name: music-data
-        persistentVolumeClaim:
-          claimName: music-pvc
+        hostPath:
+          path: /mnt/das-storage/music
       - name: navidrome-data
-        emptyDir: {}
+        hostPath:
+          path: /mnt/das-storage/navidrome/data
 ---
 apiVersion: v1
 kind: Service

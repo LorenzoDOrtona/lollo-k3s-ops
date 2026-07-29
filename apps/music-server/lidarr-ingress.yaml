@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: lidarr-ingress
+  namespace: music-server
+spec:
+  ingressClassName: tailscale
+  tls:
+  - hosts:
+    - lidarr
+  rules:
+  - host: lidarr
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: lidarr-service
+            port:
+              number: 80
