@@ -8,3 +8,4 @@ resources:
   - monitoring.yaml
   - filebrowser.yaml
   - samba.yaml
+  - music-server.yaml
