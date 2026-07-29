@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: lidarr
+  name: prowlarr
   namespace: lidarr
 spec:
   selector:
     matchLabels:
-      app: lidarr
+      app: prowlarr
   template:
     metadata:
       labels:
-        app: lidarr
+        app: prowlarr
     spec:
       containers:
-      - name: lidarr
-        image: lscr.io/linuxserver/lidarr:latest
+      - name: prowlarr
+        image: lscr.io/linuxserver/prowlarr:latest
         ports:
-        - containerPort: 8686
+        - containerPort: 9696
         env:
         - name: PUID
           value: "1000"
@@ -25,27 +25,22 @@ spec:
         - name: TZ
           value: "Europe/Rome"
         volumeMounts:
-        - name: lidarr-config
+        - name: prowlarr-config
           mountPath: /config
-        - name: media-storage
-          mountPath: /media
       volumes:
-      - name: media-storage
+      - name: prowlarr-config
         hostPath:
-          path: /mnt/das-storage
-      - name: lidarr-config
-        hostPath:
-          path: /mnt/das-storage/lidarr/config
+          path: /mnt/das-storage/prowlarr/config
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: lidarr-service
+  name: prowlarr-service
   namespace: lidarr
 spec:
   selector:
-    app: lidarr
+    app: prowlarr
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8686
+      targetPort: 9696

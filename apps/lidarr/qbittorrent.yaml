@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qbittorrent
+  namespace: lidarr
+spec:
+  selector:
+    matchLabels:
+      app: qbittorrent
+  template:
+    metadata:
+      labels:
+        app: qbittorrent
+    spec:
+      containers:
+      # Gluetun VPN Container
+      - name: gluetun
+        image: qmcgaw/gluetun
+        securityContext:
+          capabilities:
+            add:
+              - NET_ADMIN
+        envFrom:
+          - secretRef:
+              name: gluetun-secret
+        env:
+          - name: TZ
+            value: "Europe/Rome"
+        ports:
+          - containerPort: 8080
+            name: qbittorrent-ui
+          - containerPort: 6881
+            name: qbit-torrent
+          - containerPort: 6881
+            protocol: UDP
+            name: qbit-torrent-u
+          # Note: Add proxy ports here if you enable Gluetun's proxy (e.g. 8888)
+      
+      # qBittorrent Container
+      - name: qbittorrent
+        image: lscr.io/linuxserver/qbittorrent:latest
+        # Uses the network namespace of the Gluetun container
+        # Since they are in the same Pod, they already share the network namespace by default in k8s.
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "Europe/Rome"
+        - name: WEBUI_PORT
+          value: "8080"
+        volumeMounts:
+        - name: qbittorrent-config
+          mountPath: /config
+        - name: media-storage
+          mountPath: /media
+      volumes:
+      - name: media-storage
+        hostPath:
+          path: /mnt/das-storage
+      - name: qbittorrent-config
+        hostPath:
+          path: /mnt/das-storage/qbittorrent/config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: qbittorrent-service
+  namespace: lidarr
+spec:
+  selector:
+    app: qbittorrent
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

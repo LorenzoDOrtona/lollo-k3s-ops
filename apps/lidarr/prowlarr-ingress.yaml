@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prowlarr-ingress
+  namespace: lidarr
+spec:
+  ingressClassName: tailscale
+  tls:
+  - hosts:
+    - prowlarr
+  rules:
+  - host: prowlarr
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: prowlarr-service
+            port:
+              number: 80
