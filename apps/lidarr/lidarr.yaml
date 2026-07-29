@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: lidarr
-  namespace: music-server
+  namespace: lidarr
 spec:
   selector:
     matchLabels:
@@ -45,7 +45,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: lidarr-service
-  namespace: music-server
+  namespace: lidarr
 spec:
   selector:
     app: lidarr

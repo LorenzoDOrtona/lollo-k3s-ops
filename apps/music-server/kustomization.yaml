@@ -9,8 +9,6 @@ resources:
   - spotdl-ingress.yaml
   - metube.yaml
   - metube-ingress.yaml
-  - lidarr.yaml
-  - lidarr-ingress.yaml
   - tagger-cronjob.yaml
   - secrets/spotify-tokens.enc.yaml
   - secrets/metube-cookies.enc.yaml
