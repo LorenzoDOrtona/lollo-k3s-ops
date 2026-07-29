@@ -26,6 +26,8 @@ spec:
         env:
           - name: TZ
             value: "Europe/Rome"
+          - name: DOT
+            value: "off"
         ports:
           - containerPort: 8080
             name: qbittorrent-ui
