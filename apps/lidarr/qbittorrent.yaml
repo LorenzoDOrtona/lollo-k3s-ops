@@ -26,8 +26,8 @@ spec:
         env:
           - name: TZ
             value: "Europe/Rome"
-          - name: DOT
-            value: "off"
+          - name: FIREWALL_OUTBOUND_SUBNETS
+            value: "10.42.0.0/16,10.43.0.0/16"
         ports:
           - containerPort: 8080
             name: qbittorrent-ui
