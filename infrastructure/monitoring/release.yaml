@@ -38,6 +38,10 @@ spec:
             gnetId: 315
             revision: 1
             datasource: Prometheus
+          dashboard-15282:
+            gnetId: 15282
+            revision: 1
+            datasource: Prometheus
       persistence:
         enabled: true
         storageClassName: das-storage
