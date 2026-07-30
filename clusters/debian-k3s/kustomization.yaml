@@ -10,3 +10,4 @@ resources:
   - samba.yaml
   - lidarr.yaml
   - slskd.yaml
+  - navidrome.yaml

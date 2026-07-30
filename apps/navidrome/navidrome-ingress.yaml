@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: navidrome-ingress
+  namespace: navidrome
+spec:
+  ingressClassName: tailscale
+  tls:
+  - hosts:
+    - navidrome-local
+  rules:
+  - host: navidrome-local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: navidrome-service
+            port:
+              number: 80
