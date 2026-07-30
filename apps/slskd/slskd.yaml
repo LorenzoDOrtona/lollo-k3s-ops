@@ -27,6 +27,9 @@ spec:
           if ! grep -q "lollo-k3s-ops" /config/slskd.yml; then
             echo -e "\nsoulseek:\n  username: \"lollo-k3s-ops\"\n  password: \"lidarr-secret-key-1234\"" >> /config/slskd.yml
           fi
+          if ! grep -q "downloads: /music" /config/slskd.yml; then
+            echo -e "\ndirectories:\n  downloads: /music" >> /config/slskd.yml
+          fi
         volumeMounts:
         - name: slskd-config
           mountPath: /config
