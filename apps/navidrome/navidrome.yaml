@@ -30,7 +30,7 @@ spec:
       volumes:
       - name: music-data
         hostPath:
-          path: /mnt/das-storage
+          path: /mnt/das-storage/music
       - name: navidrome-data
         hostPath:
           path: /mnt/das-storage/navidrome/data
