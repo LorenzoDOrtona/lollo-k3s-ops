@@ -24,6 +24,20 @@ spec:
       enabled: false
     grafana:
       enabled: true
+      dashboards:
+        default:
+          k8s-cluster-summary:
+            gnetId: 10856
+            revision: 1
+            datasource: Prometheus
+          k8s-views-global:
+            gnetId: 15757
+            revision: 1
+            datasource: Prometheus
+          k8s-cluster-monitoring:
+            gnetId: 315
+            revision: 1
+            datasource: Prometheus
       persistence:
         enabled: true
         storageClassName: das-storage
