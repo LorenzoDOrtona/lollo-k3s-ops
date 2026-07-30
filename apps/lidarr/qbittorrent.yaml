@@ -28,6 +28,8 @@ spec:
             value: "Europe/Rome"
           - name: FIREWALL_OUTBOUND_SUBNETS
             value: "10.42.0.0/16,10.43.0.0/16"
+          - name: HTTPPROXY
+            value: "on"
         ports:
           - containerPort: 8080
             name: qbittorrent-ui
@@ -36,7 +38,8 @@ spec:
           - containerPort: 6881
             protocol: UDP
             name: qbit-torrent-u
-          # Note: Add proxy ports here if you enable Gluetun's proxy (e.g. 8888)
+          - containerPort: 8888
+            name: http-proxy
       
       # qBittorrent Container
       - name: qbittorrent
@@ -77,3 +80,8 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 8080
+      name: webui
+    - protocol: TCP
+      port: 8888
+      targetPort: 8888
+      name: http-proxy
