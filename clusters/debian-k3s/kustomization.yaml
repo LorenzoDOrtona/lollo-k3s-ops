@@ -9,3 +9,4 @@ resources:
   - filebrowser.yaml
   - samba.yaml
   - lidarr.yaml
+  - slskd.yaml

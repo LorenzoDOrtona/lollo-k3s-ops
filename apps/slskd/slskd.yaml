@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slskd
+  namespace: slskd
+spec:
+  selector:
+    matchLabels:
+      app: slskd
+  template:
+    metadata:
+      labels:
+        app: slskd
+    spec:
+      containers:
+      # Gluetun VPN Container
+      - name: gluetun
+        image: qmcgaw/gluetun
+        securityContext:
+          capabilities:
+            add:
+              - NET_ADMIN
+        envFrom:
+          - secretRef:
+              name: gluetun-secret
+        env:
+          - name: TZ
+            value: "Europe/Rome"
+          - name: FIREWALL_OUTBOUND_SUBNETS
+            value: "10.42.0.0/16,10.43.0.0/16"
+        ports:
+          - containerPort: 5030
+            name: http
+          - containerPort: 50300
+            name: soulseek
+            
+      # slskd Container
+      - name: slskd
+        image: slskd/slskd:latest
+        envFrom:
+          - secretRef:
+              name: slskd-credentials
+        env:
+        - name: SLSKD_REMOTE_CONFIGURATION
+          value: "true"
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "Europe/Rome"
+        volumeMounts:
+        - name: slskd-config
+          mountPath: /app
+        - name: media-storage
+          mountPath: /music
+      volumes:
+      - name: media-storage
+        hostPath:
+          path: /mnt/das-storage/slskd/downloads
+      - name: slskd-config
+        hostPath:
+          path: /mnt/das-storage/slskd/config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: slskd-service
+  namespace: slskd
+spec:
+  selector:
+    app: slskd
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 5030
+    - name: soulseek
+      protocol: TCP
+      port: 50300
+      targetPort: 50300
