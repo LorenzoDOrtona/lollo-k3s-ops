@@ -12,6 +12,21 @@ spec:
       labels:
         app: slskd
     spec:
+      initContainers:
+      - name: init-config
+        image: alpine:latest
+        command:
+        - /bin/sh
+        - -c
+        - |
+          mkdir -p /config
+          touch /config/slskd.yml
+          if ! grep -q "lidarr-secret-key-1234" /config/slskd.yml; then
+            echo -e "\nweb:\n  authentication:\n    api_keys:\n      lidarr:\n        key: \"lidarr-secret-key-1234\"" >> /config/slskd.yml
+          fi
+        volumeMounts:
+        - name: slskd-config
+          mountPath: /config
       containers:
       # Gluetun VPN Container
       - name: gluetun
