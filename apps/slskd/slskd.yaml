@@ -30,9 +30,12 @@ spec:
           if ! grep -q "downloads: /music" /config/slskd.yml; then
             echo -e "\ndirectories:\n  downloads: /music" >> /config/slskd.yml
           fi
+          chown -R 1000:1000 /music || true
         volumeMounts:
         - name: slskd-config
           mountPath: /config
+        - name: media-storage
+          mountPath: /music
       containers:
       # Gluetun VPN Container
       - name: gluetun
