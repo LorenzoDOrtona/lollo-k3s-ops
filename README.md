@@ -70,3 +70,11 @@ lsattr -d /mnt/das-storage/immich/postgres /mnt/das-storage/seafile/db
 ```
 > **Note**: `chattr +C` must be applied to empty directories before files are written into them.
 
+### 🎵 Lidarr + Slskd + Tidal + Lucida Setup
+This cluster automates the integration of **Soulseek (Slskd)**, **Tidal**, and **Lucida** directly into Lidarr without manual intervention.
+
+- **Storage Unification**: Both Lidarr and Slskd map the host's `/mnt/das-storage` exactly to `/media`. Slskd is configured to download to `/media/slskd/downloads` via GitOps `initContainers`. This eliminates the need for Lidarr Remote Path Mappings!
+- **Plugin Dependencies**: To enable Tidal and Lucida, the Lidarr `nightly` tag is used to expose the *Plugins* menu.
+- **Tidal Integration**: Use the `TrevTV@TrevTV` plugin repository. 
+  - **Login Flow**: Open the generated `Tidal URL`, login, and copy the final `https://tidal.com/android/login/auth?code=...` URL directly into Lidarr's **Redirect Url** field.
+- **Folder Permissions**: Folders like `/media/lucida`, `/media/tidal`, and `/config/tidal` are auto-created and assigned to UID `1000:1000` via GitOps `initContainers`, preventing "Invalid Path" or "Permission Denied" errors when configuring the Download Clients.

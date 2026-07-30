@@ -27,15 +27,16 @@ spec:
           if ! grep -q "lollo-k3s-ops" /config/slskd.yml; then
             echo -e "\nsoulseek:\n  username: \"lollo-k3s-ops\"\n  password: \"lidarr-secret-key-1234\"" >> /config/slskd.yml
           fi
-          if ! grep -q "downloads: /music" /config/slskd.yml; then
-            echo -e "\ndirectories:\n  downloads: /music" >> /config/slskd.yml
+          if ! grep -q "downloads: /media/slskd/downloads" /config/slskd.yml; then
+            echo -e "\ndirectories:\n  downloads: /media/slskd/downloads" >> /config/slskd.yml
           fi
-          chown -R 1000:1000 /music || true
+          mkdir -p /media/slskd/downloads
+          chown -R 1000:1000 /media/slskd/downloads || true
         volumeMounts:
         - name: slskd-config
           mountPath: /config
         - name: media-storage
-          mountPath: /music
+          mountPath: /media
       containers:
       # Gluetun VPN Container
       - name: gluetun
@@ -77,11 +78,11 @@ spec:
         - name: slskd-config
           mountPath: /app
         - name: media-storage
-          mountPath: /music
+          mountPath: /media
       volumes:
       - name: media-storage
         hostPath:
-          path: /mnt/das-storage/slskd/downloads
+          path: /mnt/das-storage
       - name: slskd-config
         hostPath:
           path: /mnt/das-storage/slskd/config

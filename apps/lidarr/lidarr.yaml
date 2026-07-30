@@ -12,6 +12,22 @@ spec:
       labels:
         app: lidarr
     spec:
+      initContainers:
+      - name: init-config
+        image: alpine:latest
+        command:
+        - /bin/sh
+        - -c
+        - |
+          mkdir -p /media/lucida
+          mkdir -p /media/tidal
+          mkdir -p /config/tidal
+          chown -R 1000:1000 /media/lucida /media/tidal /config/tidal || true
+        volumeMounts:
+        - name: lidarr-config
+          mountPath: /config
+        - name: media-storage
+          mountPath: /media
       containers:
       - name: lidarr
         image: lscr.io/linuxserver/lidarr:nightly
