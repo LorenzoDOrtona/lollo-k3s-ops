@@ -24,6 +24,9 @@ spec:
           if ! grep -q "lidarr-secret-key-1234" /config/slskd.yml; then
             echo -e "\nweb:\n  authentication:\n    api_keys:\n      lidarr:\n        key: \"lidarr-secret-key-1234\"" >> /config/slskd.yml
           fi
+          if ! grep -q "lollo-k3s-ops" /config/slskd.yml; then
+            echo -e "\nsoulseek:\n  username: \"lollo-k3s-ops\"\n  password: \"lidarr-secret-key-1234\"" >> /config/slskd.yml
+          fi
         volumeMounts:
         - name: slskd-config
           mountPath: /config
