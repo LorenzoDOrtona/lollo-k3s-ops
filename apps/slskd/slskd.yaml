@@ -27,11 +27,8 @@ spec:
           if ! grep -q "lollo-k3s-ops" /config/slskd.yml; then
             echo -e "\nsoulseek:\n  username: \"lollo-k3s-ops\"\n  password: \"lidarr-secret-key-1234\"" >> /config/slskd.yml
           fi
-          if ! grep -q "downloads: /media/slskd/downloads" /config/slskd.yml; then
-            echo -e "\ndirectories:\n  downloads: /media/slskd/downloads" >> /config/slskd.yml
-          fi
-          mkdir -p /media/slskd/downloads
-          chown -R 1000:1000 /media/slskd/downloads || true
+          mkdir -p /media/slskd/downloads /media/slskd/incomplete
+          chown -R 1000:1000 /media/slskd/downloads /media/slskd/incomplete || true
         volumeMounts:
         - name: slskd-config
           mountPath: /config
@@ -68,6 +65,10 @@ spec:
         env:
         - name: SLSKD_REMOTE_CONFIGURATION
           value: "true"
+        - name: SLSKD_DIRECTORIES__DOWNLOADS
+          value: "/media/slskd/downloads"
+        - name: SLSKD_DIRECTORIES__INCOMPLETE
+          value: "/media/slskd/incomplete"
         - name: PUID
           value: "1000"
         - name: PGID
