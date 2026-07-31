@@ -1,9 +1,29 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: grafana-auth
-  namespace: monitoring
+    name: grafana-auth
+    namespace: monitoring
 type: Opaque
 stringData:
-  admin-user: admin
-  admin-password: Tx4YS6B5H8lNPJgq0LBzirb1bwn4irTa89tMX8BC
+    admin-user: ENC[AES256_GCM,data:b1KqyLM=,iv:l2Pya5zHv0xIakDvzVrrOJxVf5I7KTbx8XJlunaqBKw=,tag:jFW1RhxbIDzwlMoeALKc0A==,type:str]
+    admin-password: ENC[AES256_GCM,data:XvdSRk9249WHA1AUtwNIsn9MY/Sgq7P3/Rbd4KOGXbDT1uWIoYNCuA==,iv:tj3pgW8Gw5ojwiLdFQPxlmfFw7uz1996jJ8YVHSO+BQ=,tag:iqenHw/HiUukWU0nettnlg==,type:str]
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age14smmwkjwd7tjlnlapft5n0msnylr4c2z5dfnvk6pw4rem6jfdsjqy0mgs3
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBMSEF3enRuV0l4QzJFT25v
+            dWpnZXRJcUJIMUdaZXFZcWRPMGY2L1lNY1ZvCkhFTmJudzlKbk1DUDhaeHRTcFZP
+            QUhjWkVoZGRzaVBkQmh4QWxldWFZUFEKLS0tIFdIL2g3Q0RQdG8xL3lTVnBaaWp6
+            UCtiUXZEaDRtOUV3anJZbHM1QVB0SDAKMzu58tPP5oOaMZiodzBNC1Mqi+WxN+2t
+            6dJvkaNR3oBoo2U0gn0BKg4Qa+132GW31XAMiuSy/+6TFBQdgTmTaQ==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2026-07-31T23:14:19Z"
+    mac: ENC[AES256_GCM,data:Bjg2KkYvQrjHK/1lcwqfLJoEuust81OIos1fgT5VDhMikR7bLw3ZndyIZX8D+Y+zP1adLWDFF4BiCvDjNvJDcdY+zkhLXrkZ1uorVxedTfQO36dj28mniKtqRMkbuRNlAeUeK4OKkM24ateTFuyxphQoMPN/Lihnfj4Bcgg5k4c=,iv:jMC3OnVWpDIRD631cOl4LVPpuN4SYzOB4yuTpKwiuUg=,tag:Ny+WIUpx0TOyLBcgeOkyhg==,type:str]
+    pgp: []
+    encrypted_regex: ^(data|stringData)$
+    version: 3.9.4
