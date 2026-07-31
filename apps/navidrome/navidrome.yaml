@@ -12,6 +12,12 @@ spec:
       labels:
         app: navidrome
     spec:
+      initContainers:
+      - name: sysctl-setup
+        image: busybox:latest
+        command: ["sh", "-c", "sysctl -w fs.inotify.max_user_watches=524288 && sysctl -w fs.inotify.max_user_instances=512"]
+        securityContext:
+          privileged: true
       containers:
       - name: navidrome
         image: deluan/navidrome:latest
