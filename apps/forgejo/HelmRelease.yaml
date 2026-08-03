@@ -40,7 +40,7 @@ spec:
     # Use the PVC we explicitly created
     persistence:
       enabled: true
-      existingClaim: forgejo-data
+      claimName: forgejo-data
 
     # Disable PostgreSQL and Redis to use built-in SQLite for simplicity
     postgresql:
@@ -55,6 +55,10 @@ spec:
         nodePort: 30022
 
     gitea:
+      persistence:
+        enabled: true
+        existingClaim: forgejo-data
+
       # Inject the admin credentials from the SOPS encrypted secret
       admin:
         existingSecret: forgejo-admin-secret
