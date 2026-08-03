@@ -21,12 +21,6 @@ spec:
         - |
           mkdir -p /config
           touch /config/slskd.yml
-          if ! grep -q "lidarr-secret-key-1234" /config/slskd.yml; then
-            echo -e "\nweb:\n  authentication:\n    api_keys:\n      lidarr:\n        key: \"lidarr-secret-key-1234\"" >> /config/slskd.yml
-          fi
-          if ! grep -q "lollo-k3s-ops" /config/slskd.yml; then
-            echo -e "\nsoulseek:\n  username: \"lollo-k3s-ops\"\n  password: \"lidarr-secret-key-1234\"" >> /config/slskd.yml
-          fi
           mkdir -p /media/slskd/downloads /media/slskd/incomplete
           chown -R 1000:1000 /media/slskd/downloads /media/slskd/incomplete || true
         volumeMounts:
