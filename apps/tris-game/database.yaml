@@ -1,4 +1,18 @@
-# 1. Request permanent storage on the VPS disk
+# 1. Request permanent storage on the local disk (debian-k3s style)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: tris-postgres-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: das-storage
+  hostPath:
+    path: /mnt/das-storage/tris-game/postgres
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -7,6 +21,8 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
+  storageClassName: das-storage
+  volumeName: tris-postgres-pv
   resources:
     requests:
       storage: 5Gi

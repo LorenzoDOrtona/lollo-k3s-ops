@@ -3,20 +3,13 @@ kind: Ingress
 metadata:
   name: main-ingress
   namespace: tris-game
-  annotations:
-    # Triggers cert-manager to request a certificate from Let's Encrypt
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    # Forces Traefik to automatically redirect HTTP requests to HTTPS
-    traefik.ingress.kubernetes.io/router.tls: "true"
 spec:
-  ingressClassName: traefik
-  # Defines the HTTPS setup and specifies where to store the generated certificate
+  ingressClassName: tailscale
   tls:
   - hosts:
-    - tris.lorenzodortona.com
-    secretName: tris-tls-secret
+    - tris-game
   rules:
-  - host: tris.lorenzodortona.com
+  - host: tris-game
     http:
       paths:
       # Routes backend API requests to the Go service
