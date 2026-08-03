@@ -62,6 +62,7 @@ spec:
       # Inject the admin credentials from the SOPS encrypted secret
       admin:
         existingSecret: forgejo-admin-secret
+        email: forgejo-admin@local.domain
 
       # Configure Forgejo settings (equivalent to app.ini)
       config:
