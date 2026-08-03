@@ -3,7 +3,7 @@ kind: Kustomization
 namespace: forgejo
 resources:
   - namespace.yaml
-  - secrets/forgejo-secret.yaml
+  - secrets/forgejo-secret.enc.yaml
   - storage.yaml
   - ingress.yaml
   - HelmRelease.yaml
