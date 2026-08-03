@@ -37,10 +37,6 @@ spec:
     ingress:
       enabled: false
 
-    # Ensure mounted storage has correct permissions for rootless container
-    securityContext:
-      fsGroup: 1000
-
     # Disable PostgreSQL and Redis to use built-in SQLite for simplicity
     postgresql:
       enabled: false
