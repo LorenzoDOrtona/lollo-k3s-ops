@@ -11,3 +11,5 @@ resources:
   - lidarr.yaml
   - slskd.yaml
   - navidrome.yaml
+  - forgejo.yaml
+  - tris-game.yaml

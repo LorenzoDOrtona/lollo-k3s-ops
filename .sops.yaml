@@ -2,7 +2,7 @@
 # SOPS configuration file defining creation rules
 creation_rules:
   # Apply this rule to any file ending in .enc.yaml
-  - path_regex: (apps/slskd/secrets/.*\.yaml$|apps/lidarr/secrets/.*\.yaml$|apps/tris-game/secrets/.*\.yaml$|apps/samba/secrets/.*\.yaml$|apps/music-server/secrets/.*\.yaml$|apps/immich/secrets/.*\.yaml$|apps/seafile/secrets/.*\.yaml$|infrastructure/tailscale/.*\.enc\.yaml$|infrastructure/monitoring/.*\.enc\.yaml$)
+  - path_regex: (apps/forgejo/secrets/.*\.yaml$|apps/slskd/secrets/.*\.yaml$|apps/lidarr/secrets/.*\.yaml$|apps/tris-game/secrets/.*\.yaml$|apps/samba/secrets/.*\.yaml$|apps/music-server/secrets/.*\.yaml$|apps/immich/secrets/.*\.yaml$|apps/seafile/secrets/.*\.yaml$|infrastructure/tailscale/.*\.enc\.yaml$|infrastructure/monitoring/.*\.enc\.yaml$)
     # The value below is my actual public key
     age: 'age14smmwkjwd7tjlnlapft5n0msnylr4c2z5dfnvk6pw4rem6jfdsjqy0mgs3'
     # Only encrypt the data values, keep Kubernetes metadata readable
