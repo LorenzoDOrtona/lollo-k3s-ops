@@ -3,4 +3,3 @@ kind: Kustomization
 resources:
   - ./flux-system
   - infra.yaml
-  - music-server.yaml
