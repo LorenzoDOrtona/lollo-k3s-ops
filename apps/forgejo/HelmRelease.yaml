@@ -51,9 +51,15 @@ spec:
     service:
       ssh:
         type: NodePort
+        port: 22
         nodePort: 30022
 
     gitea:
+      service:
+        ssh:
+          type: NodePort
+          port: 22
+          nodePort: 30022
       # Inject the admin credentials from the SOPS encrypted secret
       admin:
         existingSecret: forgejo-admin-secret
