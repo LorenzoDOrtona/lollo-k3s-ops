@@ -13,3 +13,4 @@ resources:
   - navidrome.yaml
   - forgejo.yaml
   - tris-game.yaml
+  - logger.yaml
