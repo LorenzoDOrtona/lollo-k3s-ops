@@ -3,6 +3,11 @@ kind: Ingress
 metadata:
   name: main-ingress
   namespace: tris-game
+  annotations:
+    # Expose this service publicly on the internet via Tailscale Funnel.
+    # Anyone can access it without being on the Tailscale network.
+    # The real server IP remains hidden behind Tailscale's infrastructure.
+    tailscale.com/funnel: "true"
 spec:
   ingressClassName: tailscale
   tls:
