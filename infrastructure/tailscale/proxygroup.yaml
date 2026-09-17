@@ -1,0 +1,11 @@
+# ProxyGroup: a pool of Tailscale proxy pods that handle Ingress routing.
+# Required by the Tailscale Operator (>= v1.78) to reconcile Ingress resources.
+# Without this, the operator skips all Ingress reconciliation entirely.
+apiVersion: tailscale.com/v1alpha1
+kind: ProxyGroup
+metadata:
+  name: ingress-proxies
+  namespace: tailscale
+spec:
+  type: ingress
+  replicas: 1

@@ -8,6 +8,9 @@ metadata:
     # Anyone can access it without being on the Tailscale network.
     # The real server IP remains hidden behind Tailscale's infrastructure.
     tailscale.com/funnel: "true"
+    # Link this Ingress to the ProxyGroup that manages the proxy pods.
+    # Required by Tailscale Operator >= v1.78.
+    tailscale.com/proxy-group: "ingress-proxies"
 spec:
   ingressClassName: tailscale
   tls:
